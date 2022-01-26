@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "BetterObsideo": {
+      "commandName": "Executable",
+      "executablePath": "D:\\Steam\\steamapps\\common\\Obsideo\\Obsideo.exe"
+    }
+  }
+}
