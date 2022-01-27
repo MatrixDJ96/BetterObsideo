@@ -22,4 +22,14 @@ namespace BetterObsideo.Patches
             DebuggerUtility.WriteMessage($"{__instance.GetType().Name}.Constructor ({__instance.GetInstanceID()})", $"TestingPatches");
         }
     }
+
+    [HarmonyPatch(typeof(ToggleFlashlight))]
+    [HarmonyPatch(nameof(ToggleFlashlight.FlickerLight))]
+    class ToggleFlashlightFlickerLightPatch
+    {
+        static bool Prefix(ToggleFlashlight __instance)
+        {
+            return false;
+        }
+    }
 }

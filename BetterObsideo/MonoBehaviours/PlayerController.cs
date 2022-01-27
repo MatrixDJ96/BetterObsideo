@@ -6,20 +6,41 @@ using UnityEngine.UI;
 
 namespace BetterObsideo.MonoBehaviours
 {
-    public class PlayerController : NetworkBehaviour
+    public class PlayerController : AbstractController<FirstPersonController>
     {
-        public static PlayerController Instance = null;
-
-        private FirstPersonController component = null;
-        public FirstPersonController Component { get => component; }
+        private static PlayerController instance;
+        public static PlayerController Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    foreach (var gameObject in GameObject.FindGameObjectsWithTag("Player"))
+                    {
+                        if (gameObject.GetComponent<NetworkObject>().OwnerClientId == NetworkManager.Singleton.LocalClientId)
+                        {
+                            if (gameObject.GetComponent<FirstPersonController>() is FirstPersonController controller)
+                            {
+                                instance = controller.gameObject.AddComponent<PlayerController>();
+                            }
+                        }
+                    }
+                }
+                return instance;
+            }
+        }
 
         public int InstanceID { get => component.GetInstanceID(); }
 
         public bool Exorcised { get => component.exorcised; set => component.exorcised = value; }
         public bool AntiRadPills { get => component.takenAntiRadPills; set => component.takenAntiRadPills = value; }
+
         public bool IsMoving { get => component.isMoving; set => component.isMoving = value; }
         public bool IsSprinting { get => component.canSprint; set => component.canSprint = value; }
         public bool IsCrouching { get => component.is_crouching; set => component.is_crouching = value; }
+
+        public bool IsTabletOpen { get => component.tabletOpen; set => component.tabletOpen = value; }
+        public bool IsEscapeMenuOpen { get => component.escapeMenuOpen; set => component.escapeMenuOpen = value; }
 
         public Image sprintBar = null;
         public Image SprintBar { get => sprintBar ??= component.sprintBar.GetComponent<Image>(); }
@@ -34,34 +55,25 @@ namespace BetterObsideo.MonoBehaviours
         public float BaseMovementSpeed { get; set; } = 1.8f;
         public float SprintMovementSpeed { get; set; } = 3.0f;
 
+        public bool ShowHuntWarning { get => component.displayHuntWarning; set => component.displayHuntWarning = value; }
         public bool ShowStats { get; set; } = false;
 
         public override void OnDestroy()
         {
-            if (this == Instance)
+            if (this == instance)
             {
-                Instance = null;
+                instance = null;
             }
             base.OnDestroy();
         }
 
-        private void Awake()
-        {
-            component = gameObject.GetComponent<FirstPersonController>();
-
-            if (component == null || !component.IsLocalPlayer)
-            {
-                Destroy(this);
-                return;
-            }
-
-            Instance = this;
-
-            DebuggerUtility.WriteMessage($"{GetType().Name}.Awake ({GetInstanceID()})");
-        }
-
         private void Start()
         {
+            if (instance == null)
+            {
+                instance = this;
+            }
+
             MaxStamina = 1.5f;
             Stamina = MaxStamina;
         }

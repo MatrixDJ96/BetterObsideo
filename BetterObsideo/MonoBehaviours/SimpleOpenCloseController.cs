@@ -5,10 +5,8 @@ using UnityEngine;
 
 namespace BetterObsideo.MonoBehaviours
 {
-    public class SimpleOpenCloseController : NetworkBehaviour
+    public class SimpleOpenCloseController : AbstractController<SimpleOpenClose>
     {
-        private SimpleOpenClose component = null;
-
         private Animator Animator { get => component.myAnimator; }
         private AudioSource AudioSource { get => component.audioSource; }
 
@@ -23,19 +21,6 @@ namespace BetterObsideo.MonoBehaviours
         public bool HasAdditional { get => component.hasAdditional; }
 
         private AnimatorStateInfo animatorStateInfo;
-
-        private void Awake()
-        {
-            component = gameObject.GetComponent<SimpleOpenClose>();
-
-            if (component == null)
-            {
-                Destroy(this);
-                return;
-            }
-
-            DebuggerUtility.WriteMessage($"{GetType().Name}.Awake ({GetInstanceID()})");
-        }
 
         private void Update()
         {

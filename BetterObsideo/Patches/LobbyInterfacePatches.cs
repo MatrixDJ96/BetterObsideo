@@ -14,12 +14,11 @@ namespace BetterObsideo.Patches
         {
             if (SteamIdUtility.IsMatrixDJ96Player())
             {
-                if (firstBoot && SteamManager.Instance.gameObject.GetComponent<SteamManagerController>() is SteamManagerController controller)
+                if (firstBoot)
                 {
                     firstBoot = false;
-                    SteamManager.Instance.createLobbyTypeDropdown.value = 1;
-                    SteamManager.Instance.CreateLobby(4);
-                    DebuggerUtility.WriteMessage($"Creating Lobby...");
+                    SteamManager.Instance.Tutorial();
+                    DebuggerUtility.WriteMessage($"Starting tutorial...");
                 }
             }
         }

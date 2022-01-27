@@ -17,7 +17,7 @@ namespace BetterObsideo
         public Harmony Harmony { get; } = new Harmony(PluginInfo.PLUGIN_NAME);
 
         public bool ShowSettings { get; set; } = false;
-        public int CurrentQuality { get; set; } = 1;
+        public int CurrentQuality { get; set; } = 0;
 
         private void Awake()
         {
@@ -57,6 +57,7 @@ namespace BetterObsideo
                     {
                         CurrentQuality = i;
                         QualitySettings.SetQualityLevel(i, true);
+                        DebuggerUtility.WriteMessage($"Set Quality Level to {QualitySettings.names[CurrentQuality]}");
                     }
                 }
 

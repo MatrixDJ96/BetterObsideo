@@ -48,6 +48,23 @@ namespace BetterObsideo.Patches
     }
 
     [HarmonyPatch(typeof(GhostArea))]
+    [HarmonyPatch(nameof(GhostArea.GracePeriod))]
+    class GhostAreaGracePeriodPatch
+    {
+        static bool Prefix(GhostArea __instance, int serverGhostID, ref IEnumerator __result)
+        {
+            var controller = __instance.gameObject.GetComponent<GhostAreaController>();
+
+            if (controller != null)
+            {
+                __result = controller.FixedGracePeriod(serverGhostID);
+            }
+
+            return controller ? false : true;
+        }
+    }
+
+    [HarmonyPatch(typeof(GhostArea))]
     [HarmonyPatch(nameof(GhostArea.Hunt))]
     class GhostAreaHuntPatch
     {
@@ -58,23 +75,6 @@ namespace BetterObsideo.Patches
             if (controller != null)
             {
                 __result = controller.FixedHunt();
-            }
-
-            return controller ? false : true;
-        }
-    }
-
-    [HarmonyPatch(typeof(GhostArea))]
-    [HarmonyPatch(nameof(GhostArea.EndHuntServerRpc))]
-    class GhostAreaEndHuntServerRpcPatch
-    {
-        static bool Prefix(GhostArea __instance)
-        {
-            var controller = __instance.gameObject.GetComponent<GhostAreaController>();
-
-            if (controller != null)
-            {
-                controller.HuntTime = 0;
             }
 
             return controller ? false : true;

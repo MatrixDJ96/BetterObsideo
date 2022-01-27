@@ -37,7 +37,7 @@ namespace BetterObsideo.Patches
     {
         static void Postfix(FirstPersonController __instance)
         {
-            if (PlayerController.Instance is PlayerController controller && controller.InstanceID == __instance.GetInstanceID())
+            if (PlayerController.Instance.InstanceID == __instance.GetInstanceID())
             {
                 PlayerController.Instance.FixMovementAndStamina();
             }
